@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">MyResume</string>
+    <string name="profile_pic">Joy\'s Profile Picture</string>
+    <string name="my_name">Joy Kangangi</string>
+    <string name="role">Android Developer</string>
+    <string name="about_me">I am passionate programmer from Kenya interested in building cool and impactful mobile applications for the community.</string>
+    <string name="skills">Skills</string>
+    <string name="kt_logo">Kotlin logo</string>
+    <string name="java_logo">Java logo</string>
+    <string name="mat_logo">MatLab logo</string>
+    <string name="py_logo">Python logo</string>
+    <string name="kt">Kotlin</string>
+    <string name="jv">Java</string>
+    <string name="mat">MatLab</string>
+    <string name="py">Python</string>
+</resources>
