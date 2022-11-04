@@ -3,7 +3,7 @@
     <string name="profile_pic">Joy\'s Profile Picture</string>
     <string name="my_name">Joy Kangangi</string>
     <string name="role">Android Developer</string>
-    <string name="about_me">I am passionate programmer from Kenya interested in building cool and impactful mobile applications for the community.</string>
+    <string name="about_me">I am passionate programmer from Kenya interested in building cool and impactful mobile applications for the community. Besides coding, I enjoy listening to music and cycling.</string>
     <string name="skills">Skills</string>
     <string name="kt_logo">Kotlin logo</string>
     <string name="java_logo">Java logo</string>
@@ -13,4 +13,10 @@
     <string name="jv">Java</string>
     <string name="mat">MatLab</string>
     <string name="py">Python</string>
+    <string name="contact">Contacts</string>
+    <string name="twitter">Twitter</string>
+    <string name="gmail">Gmail</string>
+    <string name="github">GitHub</string>
+    <string name="linkedin">LinkedIn</string>
+    <string name="no_app_found">There is no web browser installed to open the link</string>
 </resources>
