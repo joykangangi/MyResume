@@ -2,6 +2,7 @@ package com.example.myresume
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -13,9 +14,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -61,7 +62,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ResumeDetails(modifier: Modifier = Modifier) {
 
@@ -92,7 +92,7 @@ fun ResumeDetails(modifier: Modifier = Modifier) {
                     .border(
                         border = BorderStroke(
                             3.dp,
-                            color = MaterialTheme.colors.primaryVariant
+                            color = MaterialTheme.colors.primary
                         ), shape = CircleShape
                     ),
                 painter = painterResource(id = R.drawable.joy_profile_photo),
@@ -159,7 +159,7 @@ fun ResumeDetails(modifier: Modifier = Modifier) {
             )
 
             LazyVerticalGrid(
-                cells = GridCells.Fixed(2),
+                columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(8.dp),
                 modifier = modifier.align(CenterHorizontally),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -221,8 +221,16 @@ fun NavActions(icon: NavIcons) {
         NavIcons.Gmail -> {
             try {
                 //no Composable can be used in a try block
-                val mailIntent = Intent(Intent.ACTION_VIEW, Uri.parse(GMAIL_LINK))
-                startActivity(context,mailIntent,null)
+                val mailIntent = Intent(Intent.ACTION_SEND)
+                val emailAddress = arrayOf(GMAIL_LINK)
+                mailIntent.putExtra(Intent.EXTRA_EMAIL,emailAddress)
+                mailIntent.putExtra(Intent.EXTRA_SUBJECT, "Job Application")
+                mailIntent.putExtra(
+                    Intent.EXTRA_TEXT,
+                    "Hello Joy, I hope this finds you well."
+                )
+                mailIntent.type = "message/rfc822"
+                context.startActivity(Intent.createChooser(mailIntent, "Sending Email from this app"))
             } catch (e: ActivityNotFoundException) {
                 Toast.makeText(
                     context,
@@ -288,7 +296,7 @@ fun SkillsRow(
     Spacer(modifier = modifier.width(10.dp))
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun DefaultPreview() {
     ResumeDetails()
