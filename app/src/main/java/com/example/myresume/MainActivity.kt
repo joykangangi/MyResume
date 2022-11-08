@@ -13,6 +13,8 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -68,41 +70,33 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ResumeDetails(modifier: Modifier = Modifier) {
-
-    var performIntent by remember { mutableStateOf(false) }
-    var actionName by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
-
-    if (performIntent) {
-        NavActions(icon = NavIcons.valueOf(actionName))
-    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .background(color = MaterialTheme.colors.primary),
-        verticalArrangement = Arrangement.SpaceAround
+            .background(color = MaterialTheme.colors.primary)
     ) {
-        //first part of the screen (1/3 of the screen)
+
+        //first part of the screen (1/2 of the screen)
         Column(
             modifier = modifier
+                .fillMaxWidth()
                 .weight(1f)
-                .fillMaxWidth(),
+                .scrollable(scrollState, orientation = Orientation.Horizontal),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = CenterHorizontally
         ) {
             Image(
                 modifier = modifier
-                    .clip(shape = CircleShape)
-                    .padding(3.dp)
                     .size(100.dp)
+                    .padding(4.dp)
                     .border(
-                        border = BorderStroke(
-                            3.dp,
-                            color = MaterialTheme.colors.primaryVariant
-                        ), shape = CircleShape
-                    ),
+                        BorderStroke(2.dp, MaterialTheme.colors.primaryVariant),
+                        CircleShape
+                    )
+                    .clip(CircleShape),
                 painter = painterResource(id = R.drawable.joy_profile_photo),
                 contentDescription = stringResource(id = R.string.profile_pic)
             )
@@ -115,15 +109,22 @@ fun ResumeDetails(modifier: Modifier = Modifier) {
             Text(text = stringResource(id = R.string.role), fontSize = 20.sp)
         }
 
-        //Second part of the screen (2/3 of the screen)
+        //Second part of the screen (1/2 of the screen)
+        var performIntent by remember { mutableStateOf(false) }
+        var actionName by remember { mutableStateOf("") }
+        if (performIntent) {
+            NavActions(icon = NavIcons.valueOf(actionName))
+        }
         Column(
             modifier = modifier
-                .weight(3f)
+                .weight(2f)
                 .background(
                     shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
                     color = MaterialTheme.colors.surface
                 )
                 .padding(8.dp)
+                .scrollable(scrollState, Orientation.Horizontal),
+            verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(text = stringResource(id = R.string.about_me), maxLines = 5, fontSize = 15.sp)
             Spacer(modifier = modifier.height(10.dp))
@@ -192,12 +193,10 @@ fun ResumeDetails(modifier: Modifier = Modifier) {
                 }
             }
         }
-
     }
 }
 
-
-//Respective actions to be done
+//Respective actions/intents to be done
 @Composable
 fun NavActions(icon: NavIcons) {
     val context = LocalContext.current
