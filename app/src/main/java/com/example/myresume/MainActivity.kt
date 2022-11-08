@@ -19,14 +19,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -48,15 +47,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyResumeTheme {
-                val screenState = remember {
-                    MutableTransitionState(false).apply { targetState = true }
+                Surface(
+                    color = MaterialTheme.colors.background,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    val screenState = remember {
+                        MutableTransitionState(false).apply { targetState = true }
+                    }
+                    AnimatedVisibility(
+                        visibleState = screenState,
+                        content = { ResumeDetails() },
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    )
                 }
-                AnimatedVisibility(
-                    visibleState = screenState,
-                    content = { ResumeDetails() },
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                )
             }
         }
     }
@@ -67,6 +71,7 @@ fun ResumeDetails(modifier: Modifier = Modifier) {
 
     var performIntent by remember { mutableStateOf(false) }
     var actionName by remember { mutableStateOf("") }
+    val scrollState = rememberScrollState()
 
     if (performIntent) {
         NavActions(icon = NavIcons.valueOf(actionName))
@@ -75,7 +80,9 @@ fun ResumeDetails(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colors.secondary)
+            .verticalScroll(scrollState)
+            .background(color = MaterialTheme.colors.primary),
+        verticalArrangement = Arrangement.SpaceAround
     ) {
         //first part of the screen (1/3 of the screen)
         Column(
@@ -88,11 +95,12 @@ fun ResumeDetails(modifier: Modifier = Modifier) {
             Image(
                 modifier = modifier
                     .clip(shape = CircleShape)
+                    .padding(3.dp)
                     .size(100.dp)
                     .border(
                         border = BorderStroke(
                             3.dp,
-                            color = MaterialTheme.colors.primary
+                            color = MaterialTheme.colors.primaryVariant
                         ), shape = CircleShape
                     ),
                 painter = painterResource(id = R.drawable.joy_profile_photo),
@@ -113,7 +121,7 @@ fun ResumeDetails(modifier: Modifier = Modifier) {
                 .weight(3f)
                 .background(
                     shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
-                    color = Color.White
+                    color = MaterialTheme.colors.surface
                 )
                 .padding(8.dp)
         ) {
@@ -126,7 +134,7 @@ fun ResumeDetails(modifier: Modifier = Modifier) {
             )
             Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
                 SkillsRow(
-                    painter = painterResource(id = R.drawable.kotlin_logo),
+                    painter = painterResource(id = R.drawable.kotlin_log),
                     contentDescription = stringResource(id = R.string.kt_logo),
                     label = stringResource(id = R.string.kt)
                 )
@@ -159,40 +167,32 @@ fun ResumeDetails(modifier: Modifier = Modifier) {
             )
 
             LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(8.dp),
-                modifier = modifier.align(CenterHorizontally),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                columns = GridCells.Fixed(2)
             ) {
                 items(items = NavIcons.values()) { item ->
-                    Card(
-                        modifier = modifier
-                            .clickable(onClick = {
-                                actionName = item.name
-                                performIntent = !performIntent
-                            })
-                            .padding(5.dp),
-                        shape = RoundedCornerShape(15.dp),
-                        elevation = 8.dp,
+                    Column(
+                        horizontalAlignment = CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = modifier.padding(4.dp)
                     ) {
-                        Column(horizontalAlignment = CenterHorizontally
-                        , verticalArrangement = Arrangement.Center,
-                        modifier = modifier.padding(4.dp)) {
 
-                            Image(
-                                painter = painterResource(id = item.iconId),
-                                contentDescription = item.name,
-                                modifier = modifier.size(75.dp)
-                            )
-                            Spacer(modifier = modifier.height(10.dp))
-                            Text(text = item.name, fontSize = 20.sp)
-                        }
+                        Image(
+                            painter = painterResource(id = item.iconId),
+                            contentDescription = item.name,
+                            modifier = modifier
+                                .size(60.dp)
+                                .clickable {
+                                    actionName = item.name
+                                    performIntent = !performIntent
+                                }
+                        )
+                        Spacer(modifier = modifier.height(10.dp))
+                        Text(text = item.name, fontSize = 20.sp)
                     }
                 }
             }
-
         }
+
     }
 }
 
@@ -223,14 +223,19 @@ fun NavActions(icon: NavIcons) {
                 //no Composable can be used in a try block
                 val mailIntent = Intent(Intent.ACTION_SEND)
                 val emailAddress = arrayOf(GMAIL_LINK)
-                mailIntent.putExtra(Intent.EXTRA_EMAIL,emailAddress)
+                mailIntent.putExtra(Intent.EXTRA_EMAIL, emailAddress)
                 mailIntent.putExtra(Intent.EXTRA_SUBJECT, "Job Application")
                 mailIntent.putExtra(
                     Intent.EXTRA_TEXT,
                     "Hello Joy, I hope this finds you well."
                 )
                 mailIntent.type = "message/rfc822"
-                context.startActivity(Intent.createChooser(mailIntent, "Sending Email from this app"))
+                context.startActivity(
+                    Intent.createChooser(
+                        mailIntent,
+                        "Sending Email from this app"
+                    )
+                )
             } catch (e: ActivityNotFoundException) {
                 Toast.makeText(
                     context,
@@ -296,8 +301,16 @@ fun SkillsRow(
     Spacer(modifier = modifier.width(10.dp))
 }
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "Light Mode", showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark Mode")
 @Composable
 fun DefaultPreview() {
-    ResumeDetails()
+    MyResumeTheme {
+        Surface(
+            color = MaterialTheme.colors.background,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            ResumeDetails()
+        }
+    }
 }
