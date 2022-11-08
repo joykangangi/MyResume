@@ -1,7 +1,10 @@
 # ResumeApp
 ### Description
-An interactive app containing my resume.
+An interactive app containing my resume. This is my Stage 2 Task at HNGi9 Internship.
 ### Features.
+ - Display name 
+ - Dispaly picture
+ - About me and Skills
  - Open social media links from the application using [Implicit Intents](https://developer.android.com/guide/components/intents-filters).
  - Use dark and light theme [Material 3](https://m3.material.io/) on the application.
  
@@ -21,6 +24,20 @@ Enabling the email intent. At first, I had not added the `Intent.putExtra` which
    context.startActivity(Intent.createChooser(mailIntent, "Sending Email from this app")
    )
    ```
-### Application APK(Appetize)
-[Apk](https://appetize.io/app/2cez72krgeexugn32q6jp6a4uy?device=pixel4&osVersion=11.0&scale=75)
+### Links
+* [Appetize.io Link](https://appetize.io/app/2cez72krgeexugn32q6jp6a4uy?device=pixel4&osVersion=11.0&scale=75)
+* [Google Drive Link with APK](https://drive.google.com/file/d/1jaW8i4_WnI0lNvsjEyRVkuilc26TMGM-/view?usp=sharing)
+* [New Appetize Link](https://appetize.io/app/v3zzx3obd5zhgffup5tiwnzzya?device=pixel4&osVersion=11.0&scale=75)
 
+### Screenshots 
+#### 
+<table>
+  <tr>
+      <td>Light Mode</td>
+      <td>Dark Mode</td>
+  </tr>      
+  <tr>
+      <td><img src="https://user-images.githubusercontent.com/64706463/200569054-6c4e6492-eae5-47ce-ab55-bb5ac33c6bf1.png" alt="light"></td>
+      <td><img src="https://user-images.githubusercontent.com/64706463/200568692-c5b7fc56-c8fd-4bbd-9799-6f315f9593a4.png" alt="dark"></td>
+  </tr> 
+</table>
